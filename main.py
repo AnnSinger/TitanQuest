@@ -1,6 +1,6 @@
-heroes_health = 100
+heroes_health = 1000
 print('Здоровье Героя = ' + str(heroes_health))
-heroes_dmg = 50
+heroes_dmg = 100
 print('Урон Героя = ' + str(heroes_dmg))
 titan_health = 100
 print('Здоровье Титана = ' + str(titan_health))
