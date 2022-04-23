@@ -1,7 +1,15 @@
 #Settings
-hero_name = input('Введите Имя Героя ')
-hero_health = int(input('Введите Здоровье Героя '))
-hero_dmg = int(input('Введите Урон Героя '))
+
+def input_character():
+    character_name = input('Введите Имя: ')
+    character_health = int(input('Введите Здоровье: '))
+    character_dmg = int(input('Введите Урон: '))
+    return [character_name, character_health, character_dmg]
+
+print('Введите статы героя...')
+hero = input_character()
+hero_aura_enabled = False
+hero_aura_power = 1
 
 list_of_allies = []
 list_of_enemies = []
@@ -9,53 +17,68 @@ list_of_enemies = []
 while True:
     command = input('Введите команду ')
     if command == 'союзник':
-        ally_name = input('Введите Имя Союзник ')
-        ally_health = int(input('Введите Здоровье Союзника '))
-        ally_dmg = int(input('Введите Урон Союзника '))
-        list_of_allies.append([ally_name, ally_health, ally_dmg])
+        print('Введите Союзника ')
+        ally = input_character()
+        list_of_allies.append(ally)
     elif command == 'враг':
-        enemy_name = input('Введите Имя Врага ')
-        enemy_health = int(input('Введите Здоровье Врага '))
-        enemy_dmg = int(input('Введите Урон Врага '))
-        list_of_enemies.append([enemy_name, enemy_health, enemy_dmg])
+        print('Введите Врага ')
+        enemy = input_character()
+        list_of_enemies.append(enemy)
     elif command == 'выход':
         break
     else:
         print('Нет такой команды')
 
-print(hero_name, hero_health, hero_dmg)
+print(hero)
 print(list_of_allies)
 print(list_of_enemies)
 
 #Gameplay
 print('Вы в игре')
 while True:
-    if hero_health < 0:
+    if hero[1] < 0:
         print('Ваш герой мертв')
         break
 
     if len(list_of_allies) == 0:
         print('Ваши союзники мертвы')
-        break
+        # break
 
     if len(list_of_enemies) == 0:
         print('Ваши противники мертвы')
         break
 
-        print(list_of_allies)
-        print(list_of_enemies)
+    if hero_aura_enabled == True:
+        print('Смердящая аура активна, хорошим будет хорошо, плохим - плохо')
 
-    command = int(input('Кого будете атаковать? '))
-    if command >= 0 and command < len(list_of_enemies):
-        list_of_enemies[command][1] -= hero_dmg
-        print('В результате атаки были нанесены удары по ' + str(list_of_enemies[0][0]) + '. У него осталось ' + str(list_of_enemies[0][1]) + ' здоровья')
-        if list_of_enemies[command][1] <= 0:
-            list_of_enemies.pop(command)
+        for ally in list_of_allies:
+            ally[1] += 5 * hero_aura_power
+
+        for enemy in list_of_enemies:
+            enemy[1] -= 10 * hero_aura_power
+            enemy[2] -= 2 * hero_aura_power
+
+        hero_aura_power += 1
+
+    print(list_of_allies)
+    print(list_of_enemies)
+
+    command = input('Кого будете атаковать? ')
+    if command.isdigit() == True:
+        if 0 <= int(command) < len(list_of_enemies):
+            list_of_enemies[int(command)][1] -= hero[2]
+            print('В результате удара были нанесены удары по ' + str(
+                list_of_enemies[int(command)][0]) + ' У него осталось ' + str(list_of_enemies[int(command)][1]) + ' здоровья')
+            if list_of_enemies[int(command)][1] <= 0:
+                list_of_enemies.pop(int(command))
+    else:
+        if command == 'аура':
+            hero_aura_enabled = True
 
     for ally_elem in list_of_allies:
         list_of_enemies[0][1] -= ally_elem[2]
 
-    print('Удар пришёлся по врагу ' + str(list_of_enemies[0][0]) + 'У него осталось ' + str(list_of_enemies[0][1]) + ' здоровья')
+    print('Удар пришёлся по врагу ' + str(list_of_enemies[0][0]) + ' У него осталось ' + str(list_of_enemies[0][1]) + ' здоровья')
     if list_of_enemies[0][1] <= 0:
         list_of_enemies.pop(0)
 
@@ -65,3 +88,4 @@ while True:
     print('Удар пришёлся по союзнику ' + str(list_of_allies[0][0]) + 'У него осталось ' + str(list_of_allies[0][1]) + ' здоровья')
     if list_of_allies[0][1] <= 0:
         list_of_allies.pop(0)
+
